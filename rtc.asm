@@ -20,6 +20,12 @@ SDA_bit	equ	0h		; SDA port PC.0
 ;
 ; When finished, the procedure will jump straight to the CA80 Display Time program *E[0]
 
+;The code is synchronizing the CA80 time with the RTC. It is first initiating the bus, 
+then setting the address counter to 00h, starting the i2c, putting the byte 0D1h, getting the ACK, 
+getting the byte, putting the byte in (hl), 
+sending the ACK, getting the byte, putting the byte in (hl), and then increments hl.
+
+
 GET_RTC:
 
 	LD	SP,TOS			; 
@@ -46,6 +52,18 @@ GETTIME: ; Synch CA80 time with RTC
 	call getbyte		; get minutes
     ld (hl),a
     inc hl
+    
+    
+    
+    
+    ; This code is responsible for getting the current date and time from a server and storing it in memory. 
+    The "call send_ack" command sends a signal to the server indicating that the client is ready to receive data. 
+    The "call getbyte" command gets a single byte of data from the server, which is then stored 
+    in memory at the location pointed to by HL. The "ld (hl),
+    a" command loads the byte into the location specified by HL. 
+    The "inc hl" command increments the HL register, which points to the next byte in memory. 
+    This process is repeated until all three bytes (hours, date, and month) have been received and stored in memory.
+    
     call send_ack
 	call getbyte		; get hours
 	ld (hl),a
@@ -59,6 +77,19 @@ GETTIME: ; Synch CA80 time with RTC
 	ld (hl),a
 	inc hl
 	call send_ack
+	
+	
+	
+	
+; The code gets a byte (the year) and loads it into the memory location pointed to by HL. 
+It then increments HL (so it points to the next byte) and calls send_noack. 
+This sends the byte without sending an acknowledgement. 
+The code then calls stop, which halts the processor.
+RST 10h is a instruction to clear the display. 
+defb 80h is a directive to define a byte with the value 80h. 
+JP M0 is an instruction to jump to the label M0.	
+	
+	
     call getbyte            ; get year
     ld (hl),a
     inc hl
