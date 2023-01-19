@@ -1,3 +1,20 @@
+The software is an assembly language program that uses an EPROM (erasable programmable read-only memory) to control a real-time clock (RTC) in a CA80 system. 
+The program is divided into two main sections: GET_RTC and SAVETIME.
+The GET_RTC section of the software retrieves the current time from the RTC and synchronizes it with the system's clock. 
+It does this by first setting the 8255 base address for PIO_A, PIO_B, PIO_C and PIO_M, and the SCL_bit and SDA_bit for PC.4 and PC.0. 
+It then initiates the bus, sets the address counter to 00h, starts the i2c communication, and sends a read current address command to the RTC. 
+It then receives the current time (seconds, minutes, hours, date, month, and year) in that order, one byte at a time, and saves it in memory. 
+After receiving all the data, it stops the i2c communication, clears the display and jumps to the system procedure for showing the time.
+The SAVETIME section of the software saves the current software RTC to the hardware RTC. It does this by first setting the 8255 base address 
+for PIO_A, PIO_B, PIO_C and PIO_M, and the SCL_bit and SDA_bit for PC.4 and PC.0. 
+It then initiates the bus, sets the address counter, and sends the current time (seconds, minutes, hours, date, month, and year) in that order, 
+one byte at a time, to the RTC. 
+After sending all the data, it stops the i2c communication, resets the PIO_M register to its original value, and ends the SAVETIME procedure.
+The program also includes several subroutines, such as "stop," "WAIT_4," "set_addr," "start_i2c," "putbyte," "get_ack," 
+"getbyte," "send_ack," and "send_noack," which are called by the main sections of the program to perform specific tasks.
+
+
+\\\\\\\\\\\\\\\\\
 
 ## Sudo Code:
 
