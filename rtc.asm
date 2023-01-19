@@ -407,20 +407,4 @@ sdaclr: ; SDA LO without changing SCL
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;convert all the above to pseudo code
-
-
-I2C START SEQUENCE
-SDA = 1
-SCL = 1
-SDA = 0
-SCL = 0
-SDA = 1
-
-I2C STOP SEQUENCE
-SDA = 0
-SCL = 1
-SDA = 1
-SCL = 0
-SDA = 1
+ 
