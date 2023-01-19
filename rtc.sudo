@@ -1,3 +1,5 @@
+\\;   https://github.com/Kris-Sekula/CA80/blob/master/RTC/RTC_0x2000_0x2300_v1.4.asm
+
 The software is an assembly language program that uses an EPROM (erasable programmable read-only memory) to control a real-time clock (RTC) in a CA80 system. 
 The program is divided into two main sections: GET_RTC and SAVETIME.
 The GET_RTC section of the software retrieves the current time from the RTC and synchronizes it with the system's clock. 
