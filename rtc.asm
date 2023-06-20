@@ -359,18 +359,20 @@ stop:           ; i2c STOP sequence, SDA goes HI while SCL is HI
 
 
 
-;The code is written in assembly language for the 8051 microcontroller. It starts with the SDA (serial data) line going LOW while
-the SCL (serial clock) line is HIGH. This is accomplished by calling the sdaset and sclset subroutines. The sdaset subroutine sets 
-the SDA line HIGH, while the sclset subroutine sets the SCL line HIGH. Next, the code calls the sdaclr and sclclr subroutines. 
-These two subroutines are used to set the SDA and SCL lines LOW, respectively. 
-Finally, the code calls the sdaset subroutine one last time to set the SDA line HIGH, and then returns. 
-The sclset, sclclr, sdaset, and sdaclr subroutines are used to manipulate the state of the SCL and SDA lines 
-without affecting the state of the other line. 
-For example, the sclset subroutine sets the SCL line HIGH without changing the state of the SDA line. 
-Each of these subroutines starts by reading the value of the PIO_C register into the A register. 
-The PIO_C register controls the state of the I/O pins on the 8051 microcontroller. 
-Next, the code sets or clears the SCL or SDA bit in the A register, depending on which subroutine is being executed. 
-Finally, the code writes the new value of the A register back to the PIO_C register, which updates the state of the I/O pins.
+;The code is written in assembly language for the 8051 microcontroller. 
+; It starts with the SDA (serial data) line going LOW while
+; the SCL (serial clock) line is HIGH. This is accomplished by calling the sdaset and sclset subroutines. 
+; The sdaset subroutine sets 
+; the SDA line HIGH, while the sclset subroutine sets the SCL line HIGH. Next, the code calls the sdaclr and sclclr subroutines. 
+; These two subroutines are used to set the SDA and SCL lines LOW, respectively. 
+; Finally, the code calls the sdaset subroutine one last time to set the SDA line HIGH, and then returns. 
+;The sclset, sclclr, sdaset, and sdaclr subroutines are used to manipulate the state of the SCL and SDA lines 
+;without affecting the state of the other line. 
+;For example, the sclset subroutine sets the SCL line HIGH without changing the state of the SDA line. 
+;Each of these subroutines starts by reading the value of the PIO_C register into the A register. 
+;The PIO_C register controls the state of the I/O pins on the 8051 microcontroller. 
+;Next, the code sets or clears the SCL or SDA bit in the A register, depending on which subroutine is being executed. 
+;Finally, the code writes the new value of the A register back to the PIO_C register, which updates the state of the I/O pins.
 
 start_i2c:          ; i2c START sequence, SDA goes LO while SCL is HI
 			call	sdaset
