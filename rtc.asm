@@ -16,7 +16,8 @@ SDA_bit	equ	0h		; SDA port PC.0
 
 
 ;
-; Procedure to copy time from Hardware RTC to software RTC in CA80 (seconds are maintained in RAM starting from address 0xFFEDh - sec, 0xFFEEh - min, 0xFFEFh etc.)
+; Procedure to copy time from Hardware RTC to software RTC in CA80 
+;(seconds are maintained in RAM starting from address 0xFFEDh - sec, 0xFFEEh - min, 0xFFEFh etc.)
 ;
 ; When finished, the procedure will jump straight to the CA80 Display Time program *E[0]
 
