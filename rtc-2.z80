@@ -1,0 +1,89 @@
+assembly code for interfacing an RTC with the CA80 system via I2C is quite detailed and handles multiple aspects
+of the I2C protocol and the RTC read-write operations. 
+
+Changes made:
+
+1. Created a modular routine `INIT_PORT` to initialize the 8255 port. This avoids duplication and centralizes changes.
+2. Moved `GETTIME` to a separate subroutine so that it can be called from `GET_RTC`, improving modularity.
+3. Wrapped the get and save logic for time data in loops (`GETTIME_LOOP` and `SAVETIME_LOOP`). This makes it easier to read and maintain.
+
+Note: I've only shown the revised code for the `GET_RTC` and `SAVETIME` procedures for brevity. 
+You would still need to include the rest of the procedures like `WAIT_4`, `SET_ADDR`, etc. 
+The changes aimed to improve readability, reusability, and maintainability.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+ORG 2000H	; First free address for the 27C128 EPROM (base 27C64 EPROM ends at 1FFFH)
+
+; Constants and Equates
+TOS     equ 0FF8Dh    ; User STACK
+M0      equ 02c9h     ; Show clock CA80 system procedure
+PIO_A   equ 0E0h      ; CA80 user 8255 port A
+PIO_B   equ 0E1h      ; CA80 user 8255 port B
+PIO_C   equ 0E2h      ; CA80 user 8255 port C
+PIO_M   equ 0E3h      ; CA80 user 8255 control register
+SCL_bit equ 4h        ; SCL port PC.4
+SDA_bit equ 0h        ; SDA port PC.0
+
+; Initialize the 8255 port
+INIT_PORT:
+    ld  A,092h
+    out (PIO_M),A
+    ret
+
+; GET_RTC: Copies the time from the hardware RTC to the software RTC
+GET_RTC:
+    LD	SP,TOS
+    call INIT_PORT
+    call GETTIME
+    JP M0
+    ret
+
+; Synchronize CA80 time with RTC
+GETTIME:
+    ld hl,0ffedh
+    call I2C_STOP
+    call WAIT_4
+    call SET_ADDR
+    call I2C_START
+    ld a,0D1h
+    call PUTBYTE
+    call GET_ACK
+
+    ; Loop through memory locations to get time data
+    ld b,7 ; 7 bytes (seconds, minutes, hours, date, month, year)
+GETTIME_LOOP:
+    call GET_BYTE_AND_ACK
+    ld (hl),a
+    inc hl
+    djnz GETTIME_LOOP
+
+    call SEND_NOACK
+    call I2C_STOP
+    ret
+
+ORG 2100H	; Set address for SAVETIME procedure
+
+; SAVETIME: Saves the current software RTC time to the hardware RTC
+SAVETIME:
+    call INIT_PORT
+    ld hl,0ffedh
+    call I2C_STOP
+    call SET_ADDR
+
+    ; Loop through memory locations to save time data
+    ld b,7 ; 7 bytes (seconds, minutes, hours, date, month, year)
+SAVETIME_LOOP:
+    ld a,(hl)
+    call PUTBYTE
+    call GET_ACK
+    inc hl
+    djnz SAVETIME_LOOP
+
+    call I2C_STOP
+    rst 30h
+    ret
+
+; Include the rest of the procedures, such as WAIT_4, SET_ADDR, etc.
+; ...
